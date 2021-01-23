@@ -1,0 +1,221 @@
+﻿<Window x:Class="HW11_2_Interface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:HW11_2_Interface"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="850">
+    <Window.Resources>
+        <sys:Double x:Key="fontSize">14</sys:Double>
+        <sys:Double x:Key="textBoxWidth">100</sys:Double>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1.2*"></ColumnDefinition>
+            <ColumnDefinition Width="1.3*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" >
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        x:Name="OrgNameTreeView"  
+                        Margin="5" 
+                        FontSize="{StaticResource fontSize}" 
+                        Text="{Binding Path=Name}"/>
+                </StackPanel>
+                <TreeView x:Name="treeView1" >
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Path=SubDepartments}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding ID, StringFormat= ID:{0}}" FontSize="{StaticResource fontSize}"/>
+                                <TextBlock Text=" " FontSize="{StaticResource fontSize}"/>
+                                <TextBlock Text="{Binding Name}" FontSize="{StaticResource fontSize}"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </StackPanel>
+            <StackPanel Grid.Row="1" >
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Сортировать по: " FontSize="{StaticResource fontSize}" ></TextBlock>
+                    <Button Content="ID" FontSize="{StaticResource fontSize}" Click="SortDepartmentsByIDOnClick" Width="50"></Button>
+                    <Button Content="Названию" FontSize="{StaticResource fontSize}" Click="SortDepartmentsByNameOnClick"  Width="70"></Button>
+                </StackPanel>
+                <Button Content="Сохранить" FontSize="{StaticResource fontSize}" Click="SaveOnClick"></Button >
+                <Button Content="Загрузить из файла" FontSize="{StaticResource fontSize}" Click="LoadFromFileOnClick"></Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <StackPanel Grid.Row="0">
+                <GroupBox Header="Об организации">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Название: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox x:Name="OrgName" FontSize="{StaticResource fontSize}" Width="{StaticResource textBoxWidth}"
+                                     Text="{Binding Path=Name, Mode=OneWay}"></TextBox>
+                        </StackPanel>
+
+                        <Button Content="Редактировать название" FontSize="{StaticResource fontSize}" Click="EditOrgNameOnClick" ></Button>
+                        <Button Content="Показать информацию о директоре" FontSize="{StaticResource fontSize}" Click="ShowDirectorInformationOnClick" ></Button>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Выбранный отдел">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="ID: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBlock 
+                                x:Name="DivisionID" 
+                                FontSize="{StaticResource fontSize}"
+                                Text="{Binding ElementName=treeView1, Path=SelectedItem.ID}"></TextBlock>
+                        </StackPanel>
+                        <TextBox 
+                            x:Name="DivisionName" 
+                            FontSize="{StaticResource fontSize}"
+                            Text="{Binding ElementName=treeView1, Path=SelectedItem.Name, Mode=OneWay}"></TextBox>
+                        <Button Content="Ликвидировать отдел" FontSize="{StaticResource fontSize}" Click="DeleteDivisionOnClick"></Button>
+                        <Button Content="Редактирвать название" FontSize="{StaticResource fontSize}" Click="EditDivisionNameOnClick"></Button>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Нанять нового менеджера">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Имя менеджера: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox x:Name="newManagerName" FontSize="{StaticResource fontSize}" Width="{StaticResource textBoxWidth}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Должность менеджера: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox x:Name="newManagerPost" FontSize="{StaticResource fontSize}" Width="{StaticResource textBoxWidth}"></TextBox>
+                        </StackPanel>
+                        <Button Content="Нанять" FontSize="{StaticResource fontSize}" Click="HireManagerOnClick"></Button>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Добавить подразделение">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Название отдела: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox x:Name = "newDivisionName"  FontSize="{StaticResource fontSize}" Width="{StaticResource textBoxWidth}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Имя менеджера: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox x:Name="newDivManagerName" FontSize="{StaticResource fontSize}" Width="{StaticResource textBoxWidth}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Должность менеджера: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox x:Name="newDivManagerPost" FontSize="{StaticResource fontSize}" Width="{StaticResource textBoxWidth}"></TextBox>
+                        </StackPanel>
+                        <Button Content="Добавить" FontSize="{StaticResource fontSize}" Click="AddDepartmentOnClick"></Button>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="3*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListView 
+                x:Name="WorkersListView" 
+                Grid.Row="0"
+                GridViewColumnHeader.Click ="GridViewColumnHeaderOnClick">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=ID}" Width="30">ID</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Post}">Должность</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Name}">Имя</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Rate}">Ставка, $</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Salary}">Зарплата, $</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Hours}">Часы</GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Grid.Row="1">
+                <GroupBox Header="Выделенный сотрудник">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="ID: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBlock  
+                            x:Name="WorkerID"
+                            FontSize="{StaticResource fontSize}" 
+                            Text="{Binding ElementName=WorkersListView, 
+                            Path=SelectedItem.ID, Mode=OneWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Имя: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox  
+                            x:Name="WorkerName"
+                            FontSize="{StaticResource fontSize}" 
+                            Text="{Binding ElementName=WorkersListView, 
+                            Path=SelectedItem.Name, Mode=OneWay}"
+                            Width="{StaticResource textBoxWidth}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Должность: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox
+                            x:Name="WorkerPost"
+                            FontSize="{StaticResource fontSize}" 
+                            Text="{Binding ElementName=WorkersListView, 
+                            Path=SelectedItem.Post, Mode=OneWay}"
+                            Width="{StaticResource textBoxWidth}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Ставка: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox
+                            x:Name="WorkerRate"
+                            FontSize="{StaticResource fontSize}" 
+                            Text="{Binding ElementName=WorkersListView, 
+                            Path=SelectedItem.Rate, Mode=OneWay}"
+                            Width="{StaticResource textBoxWidth}"/>
+                            <TextBlock Text="$" FontSize="{StaticResource fontSize}"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Уволить" FontSize="{StaticResource fontSize}" Width="100" Click="FireWorkerOnClick"></Button>
+                            <Button Content="Сохранить изменения" FontSize="{StaticResource fontSize}" Click="EditWorkerOnClick"></Button>
+                        </StackPanel>
+
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Нанять нового сотрудника">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Имя: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox
+                                x:Name="newWorkerName"
+                                FontSize="{StaticResource fontSize}" 
+                                Width="{StaticResource textBoxWidth}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Должность: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox  
+                                x:Name="newWorkerPost"
+                                FontSize="{StaticResource fontSize}" 
+                                Width="{StaticResource textBoxWidth}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Ставка: " FontSize="{StaticResource fontSize}"></TextBlock>
+                            <TextBox  
+                                x:Name="newWorkerRate"
+                                FontSize="{StaticResource fontSize}" 
+                                Width="{StaticResource textBoxWidth}"/>
+                        </StackPanel>
+                        <CheckBox 
+                            x:Name="IsNewWorkerIntern"
+                            Content="Стажёр" 
+                            FontSize="{StaticResource fontSize}"></CheckBox>
+                        <Button Content="Нанять" FontSize="{StaticResource fontSize}" Click="HireWorkerOnClick" ></Button>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
